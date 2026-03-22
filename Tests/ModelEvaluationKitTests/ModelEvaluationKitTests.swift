@@ -58,6 +58,38 @@ struct ModelEvaluationKitTests {
     }
 
     @Test
+    func specAcceptsV2EncoderLayout() throws {
+        let spec = FluidInferenceQwen3AsrCoreMLEvaluationSpec()
+        let tempDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        try FileManager.default.createDirectory(at: tempDirectory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tempDirectory) }
+
+        let requiredEntries = [
+            "qwen3_asr_audio_encoder_v2.mlmodelc",
+            "qwen3_asr_decoder_stateful.mlmodelc",
+            "qwen3_asr_embeddings.bin",
+            "vocab.json",
+        ]
+        for entry in requiredEntries {
+            let fileURL = tempDirectory.appendingPathComponent(entry)
+            FileManager.default.createFile(atPath: fileURL.path, contents: Data(), attributes: nil)
+        }
+
+        let audioURL = tempDirectory.appendingPathComponent("sample.wav")
+        FileManager.default.createFile(atPath: audioURL.path, contents: Data(), attributes: nil)
+
+        var options = CLIOptions()
+        options.repository = "FluidInference/qwen3-asr-0.6b-coreml"
+        options.artifact = "f32"
+        options.framework = "fluidaudio"
+        options.modelDir = tempDirectory.path
+        options.audioPath = audioURL.path
+
+        let invocation = try spec.makeInvocation(from: options)
+        #expect(invocation.modelDir == tempDirectory.path)
+    }
+
+    @Test
     func runnerCanUseMockRegistriesWithoutMainFlowChanges() async throws {
         let spec = MockRepositorySpec()
         let adapter = MockAdapter()

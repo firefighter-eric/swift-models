@@ -18,7 +18,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/FluidInference/FluidAudio", branch: "main"),
+        .package(url: "https://github.com/FluidInference/FluidAudio", from: "0.12.5"),
         .package(url: "https://github.com/swiftlang/swift-testing.git", from: "0.7.0"),
     ],
     targets: [

@@ -1,13 +1,13 @@
 {
   "artifact" : "f32",
-  "elapsedMs" : 28805.18400669098,
+  "elapsedMs" : 36985.01098155975,
   "framework" : "fluidaudio",
   "input" : "\/Users\/eric\/projects\/swift-models\/data\/sound_examples\/qwen3_asr_test_audio.wav",
   "metadata" : {
     "framework" : "fluidaudio",
     "language" : "zh",
     "maxNewTokens" : "512",
-    "stagedModelDir" : "\/var\/folders\/sj\/9td94x_56l3_15cjpfk5b2mm0000gn\/T\/model-eval-fluid-qwen3-AA945B63-6FD2-4942-8207-5A72581C5903"
+    "stagedModelDir" : "\/var\/folders\/sj\/9td94x_56l3_15cjpfk5b2mm0000gn\/T\/model-eval-fluid-qwen3-933F9A78-7BCB-48F8-95DB-BE84294611B2"
   },
   "modelDir" : "\/Users\/eric\/projects\/swift-models\/data\/models\/FluidInference\/qwen3-asr-0.6b-coreml\/f32",
   "repository" : "FluidInference\/qwen3-asr-0.6b-coreml",

@@ -95,6 +95,10 @@ public struct FluidAudioAdapter: InferenceFrameworkAdapter {
 
         try linkItem(
             at: encoderSource,
+            to: stagingRoot.appendingPathComponent("qwen3_asr_audio_encoder.mlmodelc")
+        )
+        try linkItem(
+            at: encoderSource,
             to: stagingRoot.appendingPathComponent("qwen3_asr_audio_encoder_v2.mlmodelc")
         )
 

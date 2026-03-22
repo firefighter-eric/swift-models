@@ -90,15 +90,24 @@ public struct FluidInferenceQwen3AsrCoreMLEvaluationSpec: RepositoryEvaluationSp
 
     private func validateLocalArtifact(modelDir: String, artifact: String) throws {
         let directory = URL(fileURLWithPath: modelDir, isDirectory: true)
-        let requiredEntries = [
+        let encoderCandidates = [
             "qwen3_asr_audio_encoder.mlmodelc",
+            "qwen3_asr_audio_encoder_v2.mlmodelc",
+        ]
+        let requiredEntries = [
             "qwen3_asr_decoder_stateful.mlmodelc",
             "qwen3_asr_embeddings.bin",
             "vocab.json",
         ]
 
-        let missing = requiredEntries.filter { entry in
+        var missing = requiredEntries.filter { entry in
             !FileManager.default.fileExists(atPath: directory.appendingPathComponent(entry).path)
+        }
+        let hasEncoder = encoderCandidates.contains { entry in
+            FileManager.default.fileExists(atPath: directory.appendingPathComponent(entry).path)
+        }
+        if !hasEncoder {
+            missing.append(encoderCandidates[0])
         }
 
         guard missing.isEmpty else {
