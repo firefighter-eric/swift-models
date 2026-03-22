@@ -117,6 +117,47 @@ struct ModelEvaluationKitTests {
     }
 
     @Test
+    func mlxSpecAccepts4BitArtifact() throws {
+        let spec = MLXCommunityQwen3Asr4BitEvaluationSpec()
+        let tempDirectory = try makeRelativeFixtureDirectory()
+        defer { try? FileManager.default.removeItem(atPath: tempDirectory) }
+
+        let requiredEntries = [
+            "config.json",
+            "preprocessor_config.json",
+            "tokenizer_config.json",
+            "vocab.json",
+            "model.safetensors",
+        ]
+        for entry in requiredEntries {
+            FileManager.default.createFile(atPath: tempDirectory + "/" + entry, contents: Data(), attributes: nil)
+        }
+
+        let audioPath = tempDirectory + "/sample.wav"
+        FileManager.default.createFile(atPath: audioPath, contents: Data(), attributes: nil)
+
+        var options = CLIOptions()
+        options.repository = "mlx-community/Qwen3-ASR-0.6B-4bit"
+        options.artifact = "4bit"
+        options.framework = "mlxswift"
+        options.modelDir = tempDirectory
+        options.audioPath = audioPath
+
+        let invocation = try spec.makeInvocation(from: options)
+        #expect(invocation.repository == "mlx-community/Qwen3-ASR-0.6B-4bit")
+        #expect(invocation.artifact == "4bit")
+        #expect(invocation.framework == "mlxswift")
+    }
+
+    @Test
+    func mlxAdapterSupportsRegisteredRepository() {
+        let adapter = MLXSwiftAdapter()
+        #expect(adapter.frameworkId == "mlxswift")
+        #expect(adapter.supports(repositoryId: "mlx-community/Qwen3-ASR-0.6B-4bit"))
+        #expect(!adapter.supports(repositoryId: "FluidInference/qwen3-asr-0.6b-coreml"))
+    }
+
+    @Test
     func runnerCanUseMockRegistriesWithoutMainFlowChanges() async throws {
         let spec = MockRepositorySpec()
         let adapter = MockAdapter()

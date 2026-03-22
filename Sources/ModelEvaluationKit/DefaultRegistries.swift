@@ -4,6 +4,7 @@ public enum DefaultRegistries {
     public static func repositoryRegistry() -> RepositoryRegistry {
         RepositoryRegistry(specs: [
             FluidInferenceQwen3AsrCoreMLEvaluationSpec(),
+            MLXCommunityQwen3Asr4BitEvaluationSpec(),
         ])
     }
 
@@ -11,9 +12,12 @@ public enum DefaultRegistries {
         if #available(macOS 15, iOS 18, *) {
             return FrameworkRegistry(adapters: [
                 FluidAudioAdapter(),
+                MLXSwiftAdapter(),
             ])
         }
 
-        return FrameworkRegistry(adapters: [])
+        return FrameworkRegistry(adapters: [
+            MLXSwiftAdapter(),
+        ])
     }
 }
