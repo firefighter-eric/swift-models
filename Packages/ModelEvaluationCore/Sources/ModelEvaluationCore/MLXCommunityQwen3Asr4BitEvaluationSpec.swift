@@ -13,7 +13,7 @@ public struct MLXCommunityQwen3Asr4BitEvaluationSpec: RepositoryEvaluationSpec {
         defaultAudioPath: String = "data/sound_examples/qwen3_asr_test_audio.wav",
         defaultLanguage: String? = "zh",
         defaultMaxNewTokens: Int = 512,
-        supportedFrameworks: Set<String> = ["mlxswift"]
+        supportedFrameworks: Set<String> = ["mlxswift", "mlxaudioswift"]
     ) {
         self.defaultAudioPath = defaultAudioPath
         self.defaultLanguage = defaultLanguage
@@ -63,7 +63,7 @@ public struct MLXCommunityQwen3Asr4BitEvaluationSpec: RepositoryEvaluationSpec {
         guard supportedArtifacts.contains(result.artifact) else {
             throw ModelEvaluationError.invalidResult("unexpected artifact \(result.artifact)")
         }
-        guard result.framework == "mlxswift" else {
+        guard supportedFrameworks.contains(result.framework) else {
             throw ModelEvaluationError.invalidResult("unexpected framework \(result.framework)")
         }
         guard result.status == .succeeded else {
@@ -91,7 +91,11 @@ public struct MLXCommunityQwen3Asr4BitEvaluationSpec: RepositoryEvaluationSpec {
     private func validateLocalArtifact(modelDir: String, artifact: String) throws {
         let directory = URL(fileURLWithPath: modelDir, isDirectory: true)
         let requiredEntries = [
+            ".gitattributes",
+            "chat_template.json",
             "config.json",
+            "generation_config.json",
+            "merges.txt",
             "preprocessor_config.json",
             "tokenizer_config.json",
             "vocab.json",

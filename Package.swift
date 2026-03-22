@@ -8,38 +8,19 @@ let package = Package(
         .iOS(.v18),
     ],
     products: [
-        .library(
-            name: "ModelEvaluationKit",
-            targets: ["ModelEvaluationKit"]
-        ),
         .executable(
             name: "model-test",
             targets: ["ModelTestCLI"]
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/FluidInference/FluidAudio", from: "0.12.5"),
-        .package(url: "https://github.com/soniqo/speech-swift", exact: "0.0.7"),
-        .package(url: "https://github.com/swiftlang/swift-testing.git", from: "0.7.0"),
+        .package(path: "Packages/ModelEvaluationCore"),
     ],
     targets: [
-        .target(
-            name: "ModelEvaluationKit",
-            dependencies: [
-                .product(name: "FluidAudio", package: "FluidAudio"),
-                .product(name: "Qwen3ASR", package: "speech-swift"),
-                .product(name: "AudioCommon", package: "speech-swift"),
-            ]
-        ),
         .executableTarget(
             name: "ModelTestCLI",
-            dependencies: ["ModelEvaluationKit"]
-        ),
-        .testTarget(
-            name: "ModelEvaluationKitTests",
             dependencies: [
-                "ModelEvaluationKit",
-                .product(name: "Testing", package: "swift-testing"),
+                "ModelEvaluationCore",
             ]
         ),
     ]

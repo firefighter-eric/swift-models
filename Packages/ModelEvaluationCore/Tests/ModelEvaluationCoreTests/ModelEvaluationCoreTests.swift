@@ -1,8 +1,8 @@
 import Foundation
 import Testing
-@testable import ModelEvaluationKit
+@testable import ModelEvaluationCore
 
-struct ModelEvaluationKitTests {
+struct ModelEvaluationCoreTests {
     @Test
     func cliParsesRepositoryFirstArguments() throws {
         let options = try CLIParser.parse(arguments: [
@@ -123,7 +123,11 @@ struct ModelEvaluationKitTests {
         defer { try? FileManager.default.removeItem(atPath: tempDirectory) }
 
         let requiredEntries = [
+            ".gitattributes",
+            "chat_template.json",
             "config.json",
+            "generation_config.json",
+            "merges.txt",
             "preprocessor_config.json",
             "tokenizer_config.json",
             "vocab.json",
@@ -179,24 +183,6 @@ struct ModelEvaluationKitTests {
         #expect(invocation.repository == "aufklarer/Qwen3-ASR-CoreML")
         #expect(invocation.artifact == "coreml")
         #expect(invocation.framework == "speechswift")
-    }
-
-    @Test
-    func mlxAdapterSupportsRegisteredRepository() {
-        let adapter = MLXSwiftAdapter()
-        #expect(adapter.frameworkId == "mlxswift")
-        #expect(adapter.supports(repositoryId: "mlx-community/Qwen3-ASR-0.6B-4bit"))
-        #expect(!adapter.supports(repositoryId: "FluidInference/qwen3-asr-0.6b-coreml"))
-    }
-
-    @Test
-    func speechSwiftAdapterSupportsRegisteredRepository() {
-        if #available(macOS 15, iOS 18, *) {
-            let adapter = SpeechSwiftAdapter()
-            #expect(adapter.frameworkId == "speechswift")
-            #expect(adapter.supports(repositoryId: "aufklarer/Qwen3-ASR-CoreML"))
-            #expect(!adapter.supports(repositoryId: "FluidInference/qwen3-asr-0.6b-coreml"))
-        }
     }
 
     @Test

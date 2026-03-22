@@ -65,5 +65,14 @@ public enum CLIParser {
         [--language <code>] \\
         [--max-new-tokens <n>] \\
         [--json]
+
+    Example:
+      swift run model-test \\
+        --repository mlx-community/Qwen3-ASR-0.6B-4bit \\
+        --artifact 4bit \\
+        --framework mlxaudioswift \\
+        --model-dir data/models/mlx-community/Qwen3-ASR-0.6B-4bit \\
+        --audio data/sound_examples/qwen3_asr_test_audio.wav \\
+        --json
     """
 }

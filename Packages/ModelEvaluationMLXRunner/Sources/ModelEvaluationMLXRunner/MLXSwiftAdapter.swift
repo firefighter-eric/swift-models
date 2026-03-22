@@ -1,4 +1,5 @@
 import Foundation
+import ModelEvaluationCore
 
 public struct MLXSwiftAdapter: InferenceFrameworkAdapter {
     public let frameworkId = "mlxswift"

@@ -1,6 +1,7 @@
 import AudioCommon
 import CoreML
 import Foundation
+import ModelEvaluationCore
 import Qwen3ASR
 
 @available(macOS 15, iOS 18, *)

@@ -1,5 +1,6 @@
 import FluidAudio
 import Foundation
+import ModelEvaluationCore
 
 @available(macOS 15, iOS 18, *)
 public struct FluidAudioAdapter: InferenceFrameworkAdapter {
