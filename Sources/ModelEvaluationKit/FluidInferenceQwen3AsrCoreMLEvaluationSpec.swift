@@ -2,7 +2,7 @@ import Foundation
 
 public struct FluidInferenceQwen3AsrCoreMLEvaluationSpec: RepositoryEvaluationSpec {
     public let repositoryId = "FluidInference/qwen3-asr-0.6b-coreml"
-    public let supportedArtifacts: Set<String> = ["int8"]
+    public let supportedArtifacts: Set<String> = ["int8", "f32"]
 
     private let defaultAudioPath: String
     private let defaultLanguage: String?
@@ -60,7 +60,7 @@ public struct FluidInferenceQwen3AsrCoreMLEvaluationSpec: RepositoryEvaluationSp
         guard result.repository == repositoryId else {
             throw ModelEvaluationError.invalidResult("repository mismatch")
         }
-        guard result.artifact == "int8" else {
+        guard supportedArtifacts.contains(result.artifact) else {
             throw ModelEvaluationError.invalidResult("unexpected artifact \(result.artifact)")
         }
         guard result.framework == "fluidaudio" else {

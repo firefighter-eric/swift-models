@@ -20,7 +20,11 @@ public struct FluidAudioAdapter: InferenceFrameworkAdapter {
         }
 
         let startedAt = CFAbsoluteTimeGetCurrent()
-        let stagedDirectory = try stageQwen3Artifact(from: URL(fileURLWithPath: invocation.modelDir, isDirectory: true))
+        let stagedDirectory = try stageQwen3Artifact(
+            from: URL(fileURLWithPath: invocation.modelDir, isDirectory: true),
+            repository: invocation.repository,
+            artifact: invocation.artifact
+        )
         let audioURL = URL(fileURLWithPath: invocation.audioPath)
         let audioSamples = try AudioConverter().resampleAudioFile(audioURL)
 
@@ -51,7 +55,7 @@ public struct FluidAudioAdapter: InferenceFrameworkAdapter {
         )
     }
 
-    private func stageQwen3Artifact(from sourceDirectory: URL) throws -> URL {
+    private func stageQwen3Artifact(from sourceDirectory: URL, repository: String, artifact: String) throws -> URL {
         let fileManager = FileManager.default
         let stagingRoot = fileManager.temporaryDirectory.appendingPathComponent(
             "model-eval-fluid-qwen3-\(UUID().uuidString)",
@@ -83,8 +87,8 @@ public struct FluidAudioAdapter: InferenceFrameworkAdapter {
             encoderSource = legacyEncoder
         } else {
             throw ModelEvaluationError.invalidModelLayout(
-                repository: "FluidInference/qwen3-asr-0.6b-coreml",
-                artifact: "int8",
+                repository: repository,
+                artifact: artifact,
                 missing: ["qwen3_asr_audio_encoder.mlmodelc"]
             )
         }

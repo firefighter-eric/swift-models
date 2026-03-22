@@ -84,4 +84,23 @@ public struct EvaluationResult: Codable, Equatable, Sendable {
         self.error = error
         self.metadata = metadata
     }
+
+    public static func failed(from cli: CLIOptions, error: Error) -> EvaluationResult? {
+        guard let repository = cli.repository, !repository.isEmpty else {
+            return nil
+        }
+
+        return EvaluationResult(
+            repository: repository,
+            artifact: cli.artifact ?? "unknown",
+            framework: cli.framework ?? "unknown",
+            modelDir: cli.modelDir ?? "",
+            input: cli.audioPath ?? "",
+            transcript: nil,
+            elapsedMs: 0,
+            status: .failed,
+            error: error.localizedDescription,
+            metadata: [:]
+        )
+    }
 }
