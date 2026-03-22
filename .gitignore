@@ -1,0 +1,14 @@
+.DS_Store
+
+# SwiftPM
+.build/
+.swiftpm/
+
+# Local model/audio artifacts
+data/
+
+# Xcode user state
+DerivedData/
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcuserstate
