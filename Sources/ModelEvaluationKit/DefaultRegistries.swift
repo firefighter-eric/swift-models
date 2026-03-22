@@ -3,6 +3,7 @@ import Foundation
 public enum DefaultRegistries {
     public static func repositoryRegistry() -> RepositoryRegistry {
         RepositoryRegistry(specs: [
+            AufklarerQwen3AsrCoreMLEvaluationSpec(),
             FluidInferenceQwen3AsrCoreMLEvaluationSpec(),
             MLXCommunityQwen3Asr4BitEvaluationSpec(),
         ])
@@ -12,6 +13,7 @@ public enum DefaultRegistries {
         if #available(macOS 15, iOS 18, *) {
             return FrameworkRegistry(adapters: [
                 FluidAudioAdapter(),
+                SpeechSwiftAdapter(),
                 MLXSwiftAdapter(),
             ])
         }

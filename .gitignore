@@ -3,6 +3,7 @@
 # SwiftPM
 .build/
 .swiftpm/
+.build-codex*/
 
 # Local model/audio artifacts
 data/

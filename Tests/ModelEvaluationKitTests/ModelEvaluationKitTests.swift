@@ -150,11 +150,53 @@ struct ModelEvaluationKitTests {
     }
 
     @Test
+    func aufklarerSpecAcceptsCoreMLArtifact() throws {
+        let spec = AufklarerQwen3AsrCoreMLEvaluationSpec()
+        let tempDirectory = try makeRelativeFixtureDirectory()
+        defer { try? FileManager.default.removeItem(atPath: tempDirectory) }
+
+        let requiredEntries = [
+            "encoder.mlmodelc",
+            "embedding.mlmodelc",
+            "decoder.mlmodelc",
+            "config.json",
+        ]
+        for entry in requiredEntries {
+            FileManager.default.createFile(atPath: tempDirectory + "/" + entry, contents: Data(), attributes: nil)
+        }
+
+        let audioPath = tempDirectory + "/sample.wav"
+        FileManager.default.createFile(atPath: audioPath, contents: Data(), attributes: nil)
+
+        var options = CLIOptions()
+        options.repository = "aufklarer/Qwen3-ASR-CoreML"
+        options.artifact = "coreml"
+        options.framework = "speechswift"
+        options.modelDir = tempDirectory
+        options.audioPath = audioPath
+
+        let invocation = try spec.makeInvocation(from: options)
+        #expect(invocation.repository == "aufklarer/Qwen3-ASR-CoreML")
+        #expect(invocation.artifact == "coreml")
+        #expect(invocation.framework == "speechswift")
+    }
+
+    @Test
     func mlxAdapterSupportsRegisteredRepository() {
         let adapter = MLXSwiftAdapter()
         #expect(adapter.frameworkId == "mlxswift")
         #expect(adapter.supports(repositoryId: "mlx-community/Qwen3-ASR-0.6B-4bit"))
         #expect(!adapter.supports(repositoryId: "FluidInference/qwen3-asr-0.6b-coreml"))
+    }
+
+    @Test
+    func speechSwiftAdapterSupportsRegisteredRepository() {
+        if #available(macOS 15, iOS 18, *) {
+            let adapter = SpeechSwiftAdapter()
+            #expect(adapter.frameworkId == "speechswift")
+            #expect(adapter.supports(repositoryId: "aufklarer/Qwen3-ASR-CoreML"))
+            #expect(!adapter.supports(repositoryId: "FluidInference/qwen3-asr-0.6b-coreml"))
+        }
     }
 
     @Test
