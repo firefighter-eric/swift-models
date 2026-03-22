@@ -41,3 +41,13 @@ Build complete! (12.35s)
 ## Note
 
 The sample audio file exists at `data/sound_examples/qwen3_asr_test_audio.wav`, but the local Core ML model artifact files required for a full inference run were not found in the repository at the time of testing.
+
+## 官方说明
+
+根据 FluidAudio 官方文档《Qwen3-ASR》，该实现目前仍处于持续开发阶段。由于 CoreML 本身的限制，其识别准确率（WER/CER）可能低于原始 PyTorch 版本，因此当前仓库中的评测结果应视为 CoreML 落地效果，而不是与原始 PyTorch 模型完全等价的精度结论。
+
+官方文档同时说明，完整的 30 种语言 FLEURS 基准结果应参考 `Benchmarks.md`。
+
+来源：
+
+- <https://github.com/FluidInference/FluidAudio/blob/main/Documentation/ASR/Qwen3-ASR.md>
