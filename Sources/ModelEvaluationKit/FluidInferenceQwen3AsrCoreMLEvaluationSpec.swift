@@ -2,7 +2,7 @@ import Foundation
 
 public struct FluidInferenceQwen3AsrCoreMLEvaluationSpec: RepositoryEvaluationSpec {
     public let repositoryId = "FluidInference/qwen3-asr-0.6b-coreml"
-    public let supportedArtifacts: Set<String> = ["int8", "f32"]
+    public let supportedArtifacts: Set<String> = ["int8", "int8-v2", "f32"]
 
     private let defaultAudioPath: String
     private let defaultLanguage: String?
