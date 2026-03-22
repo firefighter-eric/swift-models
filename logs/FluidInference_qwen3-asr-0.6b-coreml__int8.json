@@ -1,15 +1,15 @@
 {
   "artifact" : "int8",
-  "elapsedMs" : 38711.610078811646,
+  "elapsedMs" : 24186.98000907898,
   "framework" : "fluidaudio",
-  "input" : "\/Users\/eric\/projects\/swift-models\/data\/sound_examples\/qwen3_asr_test_audio.wav",
+  "input" : "data\/sound_examples\/qwen3_asr_test_audio.wav",
   "metadata" : {
     "framework" : "fluidaudio",
     "language" : "zh",
     "maxNewTokens" : "512",
-    "stagedModelDir" : "\/var\/folders\/sj\/9td94x_56l3_15cjpfk5b2mm0000gn\/T\/model-eval-fluid-qwen3-C91703DD-520E-4160-AE43-D4056847B879"
+    "stagedModelDir" : "\/var\/folders\/sj\/9td94x_56l3_15cjpfk5b2mm0000gn\/T\/model-eval-fluid-qwen3-CA975F71-EE15-429D-ABD2-CC0118E6775B"
   },
-  "modelDir" : "\/Users\/eric\/projects\/swift-models\/data\/models\/FluidInference\/qwen3-asr-0.6b-coreml\/int8",
+  "modelDir" : "data\/models\/FluidInference\/qwen3-asr-0.6b-coreml\/int8",
   "repository" : "FluidInference\/qwen3-asr-0.6b-coreml",
   "status" : "succeeded",
   "transcript" : "Can you guarantee that the replacement part will be shipped tomorrow?"

@@ -9,8 +9,8 @@ struct ModelEvaluationKitTests {
             "--repository", "FluidInference/qwen3-asr-0.6b-coreml",
             "--artifact", "int8",
             "--framework", "fluidaudio",
-            "--model-dir", "/tmp/model",
-            "--audio", "/tmp/audio.wav",
+            "--model-dir", "fixtures/model",
+            "--audio", "fixtures/audio.wav",
             "--language", "zh",
             "--max-new-tokens", "128",
             "--json",
@@ -26,9 +26,8 @@ struct ModelEvaluationKitTests {
     @Test
     func specAcceptsF32Artifact() throws {
         let spec = FluidInferenceQwen3AsrCoreMLEvaluationSpec()
-        let tempDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
-        try FileManager.default.createDirectory(at: tempDirectory, withIntermediateDirectories: true)
-        defer { try? FileManager.default.removeItem(at: tempDirectory) }
+        let tempDirectory = try makeRelativeFixtureDirectory()
+        defer { try? FileManager.default.removeItem(atPath: tempDirectory) }
 
         let requiredEntries = [
             "qwen3_asr_audio_encoder.mlmodelc",
@@ -37,19 +36,18 @@ struct ModelEvaluationKitTests {
             "vocab.json",
         ]
         for entry in requiredEntries {
-            let fileURL = tempDirectory.appendingPathComponent(entry)
-            FileManager.default.createFile(atPath: fileURL.path, contents: Data(), attributes: nil)
+            FileManager.default.createFile(atPath: tempDirectory + "/" + entry, contents: Data(), attributes: nil)
         }
 
-        let audioURL = tempDirectory.appendingPathComponent("sample.wav")
-        FileManager.default.createFile(atPath: audioURL.path, contents: Data(), attributes: nil)
+        let audioPath = tempDirectory + "/sample.wav"
+        FileManager.default.createFile(atPath: audioPath, contents: Data(), attributes: nil)
 
         var options = CLIOptions()
         options.repository = "FluidInference/qwen3-asr-0.6b-coreml"
         options.artifact = "f32"
         options.framework = "fluidaudio"
-        options.modelDir = tempDirectory.path
-        options.audioPath = audioURL.path
+        options.modelDir = tempDirectory
+        options.audioPath = audioPath
 
         let invocation = try spec.makeInvocation(from: options)
         #expect(invocation.repository == "FluidInference/qwen3-asr-0.6b-coreml")
@@ -60,9 +58,8 @@ struct ModelEvaluationKitTests {
     @Test
     func specAcceptsV2EncoderLayout() throws {
         let spec = FluidInferenceQwen3AsrCoreMLEvaluationSpec()
-        let tempDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
-        try FileManager.default.createDirectory(at: tempDirectory, withIntermediateDirectories: true)
-        defer { try? FileManager.default.removeItem(at: tempDirectory) }
+        let tempDirectory = try makeRelativeFixtureDirectory()
+        defer { try? FileManager.default.removeItem(atPath: tempDirectory) }
 
         let requiredEntries = [
             "qwen3_asr_audio_encoder_v2.mlmodelc",
@@ -71,22 +68,21 @@ struct ModelEvaluationKitTests {
             "vocab.json",
         ]
         for entry in requiredEntries {
-            let fileURL = tempDirectory.appendingPathComponent(entry)
-            FileManager.default.createFile(atPath: fileURL.path, contents: Data(), attributes: nil)
+            FileManager.default.createFile(atPath: tempDirectory + "/" + entry, contents: Data(), attributes: nil)
         }
 
-        let audioURL = tempDirectory.appendingPathComponent("sample.wav")
-        FileManager.default.createFile(atPath: audioURL.path, contents: Data(), attributes: nil)
+        let audioPath = tempDirectory + "/sample.wav"
+        FileManager.default.createFile(atPath: audioPath, contents: Data(), attributes: nil)
 
         var options = CLIOptions()
         options.repository = "FluidInference/qwen3-asr-0.6b-coreml"
         options.artifact = "f32"
         options.framework = "fluidaudio"
-        options.modelDir = tempDirectory.path
-        options.audioPath = audioURL.path
+        options.modelDir = tempDirectory
+        options.audioPath = audioPath
 
         let invocation = try spec.makeInvocation(from: options)
-        #expect(invocation.modelDir == tempDirectory.path)
+        #expect(invocation.modelDir == tempDirectory)
     }
 
     @Test
@@ -102,8 +98,8 @@ struct ModelEvaluationKitTests {
         options.repository = spec.repositoryId
         options.artifact = "mock-artifact"
         options.framework = adapter.frameworkId
-        options.modelDir = "/tmp/mock-model"
-        options.audioPath = "/tmp/mock-audio.wav"
+        options.modelDir = "fixtures/mock-model"
+        options.audioPath = "fixtures/mock-audio.wav"
 
         let result = try await runner.run(cli: options)
         #expect(result.repository == spec.repositoryId)
@@ -121,8 +117,8 @@ struct ModelEvaluationKitTests {
             repository: "FluidInference/qwen3-asr-0.6b-coreml",
             artifact: "f32",
             framework: "fluidaudio",
-            modelDir: "/tmp/model",
-            input: "/tmp/audio.wav",
+            modelDir: "fixtures/model",
+            input: "fixtures/audio.wav",
             transcript: "测试转写",
             elapsedMs: 12.5,
             status: .succeeded,
@@ -146,8 +142,8 @@ struct ModelEvaluationKitTests {
         options.repository = "FluidInference/qwen3-asr-0.6b-coreml"
         options.artifact = "f32"
         options.framework = "fluidaudio"
-        options.modelDir = "/tmp/model"
-        options.audioPath = "/tmp/audio.wav"
+        options.modelDir = "fixtures/model"
+        options.audioPath = "fixtures/audio.wav"
 
         let result = EvaluationResult.failed(
             from: options,
@@ -171,8 +167,8 @@ private struct MockRepositorySpec: RepositoryEvaluationSpec {
             repository: repositoryId,
             artifact: "mock-artifact",
             framework: "mock-framework",
-            modelDir: cli.modelDir ?? "/tmp/mock-model",
-            audioPath: cli.audioPath ?? "/tmp/mock-audio.wav",
+            modelDir: cli.modelDir ?? "fixtures/mock-model",
+            audioPath: cli.audioPath ?? "fixtures/mock-audio.wav",
             language: nil,
             maxNewTokens: 1
         )
@@ -183,6 +179,12 @@ private struct MockRepositorySpec: RepositoryEvaluationSpec {
             throw ModelEvaluationError.invalidResult("unexpected mock transcript")
         }
     }
+}
+
+private func makeRelativeFixtureDirectory() throws -> String {
+    let directory = ".build/test-fixtures/\(UUID().uuidString)"
+    try FileManager.default.createDirectory(atPath: directory, withIntermediateDirectories: true)
+    return directory
 }
 
 private struct MockAdapter: InferenceFrameworkAdapter {

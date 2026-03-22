@@ -10,7 +10,7 @@ public struct FluidInferenceQwen3AsrCoreMLEvaluationSpec: RepositoryEvaluationSp
     private let supportedFrameworks: Set<String>
 
     public init(
-        defaultAudioPath: String = "/Users/eric/projects/swift-models/data/sound_examples/qwen3_asr_test_audio.wav",
+        defaultAudioPath: String = "data/sound_examples/qwen3_asr_test_audio.wav",
         defaultLanguage: String? = "zh",
         defaultMaxNewTokens: Int = 512,
         supportedFrameworks: Set<String> = ["fluidaudio"]

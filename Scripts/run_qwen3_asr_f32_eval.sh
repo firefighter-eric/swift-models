@@ -2,7 +2,8 @@
 
 set -euo pipefail
 
-REPO_DIR="/Users/eric/projects/swift-models"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 DEFAULT_MODEL_DIR="$REPO_DIR/data/models/FluidInference/qwen3-asr-0.6b-coreml/f32"
 DEFAULT_AUDIO_PATH="$REPO_DIR/data/sound_examples/qwen3_asr_test_audio.wav"
 
